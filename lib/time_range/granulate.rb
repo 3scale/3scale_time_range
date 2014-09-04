@@ -9,84 +9,57 @@ class TimeRange < Range
       @years = []
       @months = []
       @rest = []
-      split(range)
+      split range
     end
 
     private
 
     def split(range)
-      extract_years(range)
+      extract_cycle(range, :year)
     end
 
-    def extract_years(range)
-      result = []
-      range.each(:year) do |year|
-        if year.beginning_of_year >= range.begin && year.end_of_year <= range.end
-          result << year
-        end
-      end
+    def extract_cycle(range, cycle)
+      @rest << range and return if cycle.nil?
 
-      if result.empty?
-        extract_months(range)
+      cycle_start, cycle_end = extract_cycle_boundaries(range, cycle)
+      if cycle_start && cycle_end
+        instance_variable_get("@#{cycle}s") << TimeRange.new(cycle_start, cycle_end)
+
+        if range.begin < cycle_start
+          extract_cycle(TimeRange.new(range.begin,
+            (cycle_start - 1.hour).end_of_day), next_cycle(cycle))
+        end
+        if range.end > cycle_end
+          extract_cycle(TimeRange.new(
+             (cycle_end + 1.hour).beginning_of_day, range.end), next_cycle(cycle))
+        end
       else
-        @years << TimeRange.new(result.first.beginning_of_year, result.last.end_of_year)
-
-        if range.begin < result.first.beginning_of_year
-          extract_months(TimeRange.new(range.begin,
-            (result.first.beginning_of_year - 1.day).end_of_month))
-        end
-        if range.end > result.last.end_of_year
-          extract_months(TimeRange.new(
-             (result.last.end_of_year + 1.day).beginning_of_month, range.end))
-        end
+        extract_cycle(range, next_cycle(cycle))
       end
     end
 
-    def extract_months(range)
-      result = []
-      range.each(:month) do |month|
-        if month.beginning_of_month >= range.begin && month.end_of_month <= range.end
-          result << month
-        end
-      end
-
-      if result.empty?
-        extract_days(range)
-      else
-        @months << TimeRange.new(result.first.beginning_of_month, result.last.end_of_month)
-
-        if range.begin < result.first.beginning_of_month
-          extract_days(TimeRange.new(range.begin,
-            (result.first.beginning_of_month - 1.hour).end_of_day))
-        end
-        if range.end > result.last.end_of_month
-          extract_days(TimeRange.new(
-             (result.last.end_of_month + 1.hour).beginning_of_day, range.end))
-        end
+    def next_cycle(current_cycle)
+      case current_cycle
+        when :year then :month
+        when :month then :day
+        when :day then nil
+        else raise "Unknown cycle: #{current_cycle.inspect}"
       end
     end
 
-    def extract_days(range)
+    def extract_cycle_boundaries(range, cycle)
       result = []
-      range.each(:day) do |day|
-        if day.beginning_of_day >= range.begin && day.end_of_day <= range.end
-          result << day
+      range.each(cycle) do |date|
+        if date.send("beginning_of_#{cycle}") >= range.begin &&
+          date.send("end_of_#{cycle}") <= range.end
+          result << date
         end
       end
-
       if result.empty?
-        @rest << range
+        return nil, nil
       else
-        @days << TimeRange.new(result.first.beginning_of_day, result.last.end_of_day)
-
-        if range.begin < result.first.beginning_of_day
-          @rest << TimeRange.new(range.begin,
-            (result.first.beginning_of_day - 1.hour).end_of_day)
-        end
-        if range.end > result.last.end_of_day
-          @rest << TimeRange.new(
-             (result.last.end_of_day + 1.hour).beginning_of_day, range.end)
-        end
+        return result.first.send("beginning_of_#{cycle}"),
+          result.last.send("end_of_#{cycle}")
       end
     end
 

@@ -66,4 +66,3 @@ class GranulateTest < Minitest::Test
   end
 end
 
-
