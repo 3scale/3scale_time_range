@@ -4,9 +4,9 @@ require_relative '../lib/time_range'
 class GranulateTest < Minitest::Test
 
   def setup
-    range = TimeRange.new(
-      DateTime.parse("2012-10-09 07:23"), DateTime.parse("2014-02-05 13:45"))
-    @gran = range.granulate
+    @gran = TimeRange.new(
+      DateTime.parse("2012-10-09 07:23"), DateTime.parse("2014-02-05 13:45")
+    ).granulate
   end
 
   def test_granulates_by_year
@@ -50,6 +50,18 @@ class GranulateTest < Minitest::Test
         TimeRange.new(
           DateTime.parse("2014-02-05").beginning_of_day,
           DateTime.parse("2014-02-05 13:45"))
+      ]
+  end
+
+  def test_works_also_for_short_ranges
+    @gran = TimeRange.new(
+      DateTime.parse("2012-10-09 07:23"), DateTime.parse("2012-10-09 13:45")
+    ).granulate
+
+    assert_equal @gran.rest, [
+        TimeRange.new(
+          DateTime.parse("2012-10-09 07:23"),
+          DateTime.parse("2012-10-09 13:45"))
       ]
   end
 end

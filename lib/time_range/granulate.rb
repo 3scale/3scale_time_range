@@ -25,15 +25,20 @@ class TimeRange < Range
           result << year
         end
       end
-      @years << TimeRange.new(result.first.beginning_of_year, result.last.end_of_year)
 
-      if range.begin < result.first.beginning_of_year
-        extract_months(TimeRange.new(range.begin,
-          (result.first.beginning_of_year - 1.day).end_of_month))
-      end
-      if range.end > result.last.end_of_year
-        extract_months(TimeRange.new(
-           (result.last.end_of_year + 1.day).beginning_of_month, range.end))
+      if result.empty?
+        extract_months(range)
+      else
+        @years << TimeRange.new(result.first.beginning_of_year, result.last.end_of_year)
+
+        if range.begin < result.first.beginning_of_year
+          extract_months(TimeRange.new(range.begin,
+            (result.first.beginning_of_year - 1.day).end_of_month))
+        end
+        if range.end > result.last.end_of_year
+          extract_months(TimeRange.new(
+             (result.last.end_of_year + 1.day).beginning_of_month, range.end))
+        end
       end
     end
 
@@ -44,15 +49,20 @@ class TimeRange < Range
           result << month
         end
       end
-      @months << TimeRange.new(result.first.beginning_of_month, result.last.end_of_month)
 
-      if range.begin < result.first.beginning_of_month
-        extract_days(TimeRange.new(range.begin,
-          (result.first.beginning_of_month - 1.hour).end_of_day))
-      end
-      if range.end > result.last.end_of_month
-        extract_days(TimeRange.new(
-           (result.last.end_of_month + 1.hour).beginning_of_day, range.end))
+      if result.empty?
+        extract_days(range)
+      else
+        @months << TimeRange.new(result.first.beginning_of_month, result.last.end_of_month)
+
+        if range.begin < result.first.beginning_of_month
+          extract_days(TimeRange.new(range.begin,
+            (result.first.beginning_of_month - 1.hour).end_of_day))
+        end
+        if range.end > result.last.end_of_month
+          extract_days(TimeRange.new(
+             (result.last.end_of_month + 1.hour).beginning_of_day, range.end))
+        end
       end
     end
 
@@ -63,15 +73,20 @@ class TimeRange < Range
           result << day
         end
       end
-      @days << TimeRange.new(result.first.beginning_of_day, result.last.end_of_day)
 
-      if range.begin < result.first.beginning_of_day
-        @rest << TimeRange.new(range.begin,
-          (result.first.beginning_of_day - 1.hour).end_of_day)
-      end
-      if range.end > result.last.end_of_day
-        @rest << TimeRange.new(
-           (result.last.end_of_day + 1.hour).beginning_of_day, range.end)
+      if result.empty?
+        @rest << range
+      else
+        @days << TimeRange.new(result.first.beginning_of_day, result.last.end_of_day)
+
+        if range.begin < result.first.beginning_of_day
+          @rest << TimeRange.new(range.begin,
+            (result.first.beginning_of_day - 1.hour).end_of_day)
+        end
+        if range.end > result.last.end_of_day
+          @rest << TimeRange.new(
+             (result.last.end_of_day + 1.hour).beginning_of_day, range.end)
+        end
       end
     end
 
