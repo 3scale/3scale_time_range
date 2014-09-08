@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'time_range/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "time_range"
+  spec.name          = "3scale_time_range"
   spec.version       = TimeRange::VERSION
   spec.authors       = ["Wojciech Ogrodowczyk"]
   spec.email         = ["wojciech@3scale.net"]
