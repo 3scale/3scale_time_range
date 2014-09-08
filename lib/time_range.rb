@@ -1,6 +1,8 @@
 require 'time_range/version'
 require 'active_support/time'
 
+require_relative 'time_range/granulate'
+
 class TimeRange < Range
 
   def initialize(start_time, end_time, exclusive = false)
@@ -111,6 +113,10 @@ class TimeRange < Range
 
   def inspect
     "#{self.class.name}(#{super})"
+  end
+
+  def granulate
+    @granulate ||= Granulate.new(self)
   end
 
   class SimpleEnumerator
