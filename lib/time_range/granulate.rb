@@ -1,4 +1,4 @@
-class TimeRange < Range
+class TimeRange
   class Granulate
     attr_accessor :days, :months, :years, :rest
 
@@ -9,32 +9,31 @@ class TimeRange < Range
       @years = []
       @months = []
       @rest = []
-      split range
+      extract(range, :year)
     end
 
     private
 
-    def split(range)
-      extract_cycle(range, :year)
-    end
+    def extract(range, cycle)
+      if cycle.nil?
+        rest << range
+        return
+      end
 
-    def extract_cycle(range, cycle)
-      @rest << range and return if cycle.nil?
-
-      cycle_start, cycle_end = extract_cycle_boundaries(range, cycle)
+      cycle_start, cycle_end = extract_boundaries(range, cycle)
       if cycle_start && cycle_end
-        instance_variable_get("@#{cycle}s") << TimeRange.new(cycle_start, cycle_end)
+        send("#{cycle}s") << TimeRange.new(cycle_start, cycle_end)
 
         if range.begin < cycle_start
-          extract_cycle(TimeRange.new(range.begin,
-            (cycle_start - 1.hour).end_of_day), next_cycle(cycle))
+          extract(TimeRange.new(
+            range.begin, (cycle_start - 1.hour).end_of_day), next_cycle(cycle))
         end
         if range.end > cycle_end
-          extract_cycle(TimeRange.new(
-             (cycle_end + 1.hour).beginning_of_day, range.end), next_cycle(cycle))
+          extract(TimeRange.new(
+            (cycle_end + 1.hour).beginning_of_day, range.end), next_cycle(cycle))
         end
       else
-        extract_cycle(range, next_cycle(cycle))
+        extract(range, next_cycle(cycle))
       end
     end
 
@@ -47,7 +46,7 @@ class TimeRange < Range
       end
     end
 
-    def extract_cycle_boundaries(range, cycle)
+    def extract_boundaries(range, cycle)
       result = []
       range.each(cycle) do |date|
         if date.send("beginning_of_#{cycle}") >= range.begin &&
