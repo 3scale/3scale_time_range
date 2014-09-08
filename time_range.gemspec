@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'time_range/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "time_range"
+  spec.name          = "3scale_time_range"
   spec.version       = TimeRange::VERSION
   spec.authors       = ["Wojciech Ogrodowczyk"]
   spec.email         = ["wojciech@3scale.net"]
@@ -22,4 +22,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "bundler", ">= 1.6"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "minitest", "~> 5.4.0"
+  spec.add_development_dependency "geminabox", "~> 0.12.4"
 end
