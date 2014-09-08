@@ -116,7 +116,7 @@ class TimeRange < Range
   end
 
   def granulate
-    Granulate.new(self)
+    @granulate ||= Granulate.new(self)
   end
 
   class SimpleEnumerator

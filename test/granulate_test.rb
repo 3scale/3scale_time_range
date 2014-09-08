@@ -64,5 +64,13 @@ class GranulateTest < Minitest::Test
           DateTime.parse("2012-10-09 13:45"))
       ]
   end
+
+  def test_granulation_is_cached_in_time_range
+    range = TimeRange.new(
+      DateTime.parse("2012-10-09 07:23"), DateTime.parse("2012-10-09 13:45")
+    )
+
+    assert_equal range.granulate.object_id, range.granulate.object_id
+  end
 end
 
