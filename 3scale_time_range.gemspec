@@ -1,7 +1,7 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'time_range/version'
+require '3scale_time_range/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "3scale_time_range"
@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["wojciech@3scale.net"]
   spec.summary       = %q{Utility class for ranges of times (time periods).}
   spec.description   = %q{Utility class for ranges of times (time periods). It's like Range, but has additional enumeration capabilities.}
-  spec.homepage      = "https://github.com/3scale/time_range"
+  spec.homepage      = "https://github.com/3scale/3scale_time_range"
 
   spec.files         = `git ls-files -z`.split("\x0")
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
