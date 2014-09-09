@@ -1,5 +1,5 @@
 require 'minitest/autorun'
-require_relative '../lib/time_range'
+require_relative '../lib/3scale_time_range'
 
 class TimeRangeTest < Minitest::Test
 

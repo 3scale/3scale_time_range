@@ -1,7 +1,7 @@
-require 'time_range/version'
 require 'active_support/time'
+require '3scale_time_range/version'
+require '3scale_time_range/granulate'
 
-require_relative 'time_range/granulate'
 
 class TimeRange < Range
 
