@@ -32,7 +32,7 @@ class TimeRange < Range
       enumerator.each(&block) if block_given?
       enumerator
     else
-      super
+      super(&block)
     end
   end
 
