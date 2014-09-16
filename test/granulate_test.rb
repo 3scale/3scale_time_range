@@ -72,5 +72,56 @@ class GranulateTest < Minitest::Test
 
     assert_equal range.granulate.object_id, range.granulate.object_id
   end
+
+  def test_properly_parses_open_ended_ranges_1
+    gran = (DateTime.parse("2011-01-01")...DateTime.parse("2012-01-01")).
+      to_time_range.granulate
+
+    assert_equal 1, gran.years.size
+    assert_equal 0, gran.months.size
+    assert_equal 0, gran.days.size
+    assert_equal 0, gran.rest.size
+
+    refute gran.years.first.exclude_end?
+  end
+
+  def test_properly_parses_open_ended_ranges_2
+    gran = (DateTime.parse("2011-01-01")...DateTime.parse("2011-12-31").end_of_year).
+      to_time_range.granulate
+
+    assert_equal 0, gran.years.size
+    assert_equal 1, gran.months.size
+    assert_equal 1, gran.days.size
+    assert_equal 1, gran.rest.size
+
+    refute gran.months.first.exclude_end?
+    refute gran.days.first.exclude_end?
+    assert gran.rest.first.exclude_end?
+  end
+
+  def test_properly_parses_close_ended_ranges_1
+    gran = (DateTime.parse("2011-01-01")..DateTime.parse("2012-01-01")).
+      to_time_range.granulate
+
+    assert_equal 1, gran.years.size
+    assert_equal 0, gran.months.size
+    assert_equal 0, gran.days.size
+    assert_equal 1, gran.rest.size
+
+    refute gran.rest.first.exclude_end?
+  end
+
+  def test_properly_parses_close_ended_ranges_2
+    gran = (DateTime.parse("2011-01-01")..DateTime.parse("2011-12-31").end_of_year).
+      to_time_range.granulate
+
+    assert_equal 1, gran.years.size
+    assert_equal 0, gran.months.size
+    assert_equal 0, gran.days.size
+    assert_equal 0, gran.rest.size
+
+    refute gran.years.first.exclude_end?
+  end
+
 end
 

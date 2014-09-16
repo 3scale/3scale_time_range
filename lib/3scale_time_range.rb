@@ -2,7 +2,6 @@ require 'active_support/time'
 require '3scale_time_range/version'
 require '3scale_time_range/granulate'
 
-
 class TimeRange < Range
 
   def initialize(start_time, end_time, exclusive = false)
