@@ -123,5 +123,15 @@ class GranulateTest < Minitest::Test
     refute gran.years.first.exclude_end?
   end
 
+  def test_properly_handles_Time_UTC_ends_of_months
+    d = DateTime.parse('2010-01-01')
+    gran = (d.beginning_of_month.to_time.utc..d.end_of_month.to_time.utc).to_time_range.granulate
+
+    assert_equal 0, gran.years.size
+    assert_equal 1, gran.months.size
+    assert_equal 0, gran.days.size
+    assert_equal 0, gran.rest.size
+  end
+
 end
 

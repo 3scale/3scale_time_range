@@ -72,13 +72,13 @@ class TimeRange
     # Refactoring requires investigation into TimeRange use in System.
     def included_in_range?(range, value)
       (range.begin <= value) &&
-        (value < range.end || (value == range.end && !range.exclude_end?))
+        (value < range.end || (value.to_i == range.end.to_i && !range.exclude_end?))
     end
 
     # TODO: Can be refactored to TimeRange#empty?
     # Refactoring requires investigation into TimeRange use in System.
     def empty_range?(range)
-      (range.begin == range.end) && range.exclude_end?
+      (range.begin.to_i == range.end.to_i) && range.exclude_end?
     end
 
   end
