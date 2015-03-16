@@ -62,7 +62,6 @@ class TimeRange < Range
   end
 
   def utc_offset
-    assert_time_with_zone
     self.begin.utc_offset
   end
 
@@ -126,9 +125,10 @@ class TimeRange < Range
     end
 
     def each
-      current = @range.begin
-      last = @range.end
-      last -= @step if @range.exclude_end?
+      offset  = @range.utc_offset
+      current = @range.begin.utc + offset
+      last    = @range.end.utc + offset
+      last   -= @step if @range.exclude_end?
 
       while current.to_i <= last.to_i
         yield(current)
