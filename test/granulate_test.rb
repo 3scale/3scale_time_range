@@ -45,23 +45,23 @@ class GranulateTest < Minitest::Test
     assert_equal @gran.rest, [
         TimeRange.new(
           DateTime.parse("2012-10-09 07:23"),
-          DateTime.parse("2012-10-09").end_of_day),
+          DateTime.parse("2012-10-09 07:00").end_of_hour),
 
         TimeRange.new(
-          DateTime.parse("2014-02-05").beginning_of_day,
+          DateTime.parse("2014-02-05 13:45").beginning_of_hour,
           DateTime.parse("2014-02-05 13:45"))
       ]
   end
 
-  def test_works_also_for_short_ranges
+  def test_range_that_cannot_be_granulated
     @gran = TimeRange.new(
-      DateTime.parse("2012-10-09 07:23"), DateTime.parse("2012-10-09 13:45")
+      DateTime.parse("2012-10-09 07:23"), DateTime.parse("2012-10-09 07:45")
     ).granulate
 
     assert_equal @gran.rest, [
         TimeRange.new(
           DateTime.parse("2012-10-09 07:23"),
-          DateTime.parse("2012-10-09 13:45"))
+          DateTime.parse("2012-10-09 07:45"))
       ]
   end
 
