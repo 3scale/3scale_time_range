@@ -2,6 +2,8 @@ class TimeRange
   class Granulate
     attr_accessor :hours, :days, :months, :years, :rest
 
+    GRANULARITIES = [:year, :month, :day, :hour]
+
     def initialize(range)
       raise 'Supports only TimeRange objects' unless range.is_a? TimeRange
 
@@ -47,13 +49,9 @@ class TimeRange
     end
 
     def next_cycle(current_cycle)
-      case current_cycle
-        when :year then :month
-        when :month then :day
-        when :day then :hour
-        when :hour then nil
-        else raise "Unknown cycle: #{current_cycle.inspect}"
-      end
+      current_cycle_index = GRANULARITIES.find_index(current_cycle)
+      raise "Unknown cycle: #{current_cycle.inspect}" unless current_cycle_index
+      GRANULARITIES[current_cycle_index + 1]
     end
 
     def extract_boundaries(range, cycle)
