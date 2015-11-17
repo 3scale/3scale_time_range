@@ -1,10 +1,13 @@
 class TimeRange
   class Granulate
-    attr_accessor :days, :months, :years, :rest
+    attr_accessor :hours, :days, :months, :years, :rest
+
+    GRANULARITIES = [:year, :month, :day, :hour]
 
     def initialize(range)
       raise 'Supports only TimeRange objects' unless range.is_a? TimeRange
 
+      @hours = []
       @days = []
       @years = []
       @months = []
@@ -25,18 +28,20 @@ class TimeRange
         send("#{cycle}s") << TimeRange.new(cycle_start, cycle_end)
 
         if range.begin < cycle_start
+          # Getting the last hour is enough because is the smallest resolution
+          # that we support. If we supported minutes, we would need to get the
+          # last minute non included.
+          last_hour_not_treated = (cycle_start - 1.hour).end_of_hour
           extract(
-            TimeRange.new(range.begin, (cycle_start - 1.hour).end_of_day, false),
-            next_cycle(cycle)
-          )
+            TimeRange.new(range.begin, last_hour_not_treated, false),
+            next_cycle(cycle))
         end
+
         if range.end > cycle_end
+          first_hour_not_treated = (cycle_end + 1.hour).beginning_of_hour
           extract(
-            TimeRange.new(
-              (cycle_end + 1.hour).beginning_of_day, range.end, range.exclude_end?
-            ),
-            next_cycle(cycle)
-          )
+            TimeRange.new(first_hour_not_treated, range.end, range.exclude_end?),
+            next_cycle(cycle))
         end
       else
         extract(range, next_cycle(cycle))
@@ -44,12 +49,9 @@ class TimeRange
     end
 
     def next_cycle(current_cycle)
-      case current_cycle
-        when :year then :month
-        when :month then :day
-        when :day then nil
-        else raise "Unknown cycle: #{current_cycle.inspect}"
-      end
+      current_cycle_index = GRANULARITIES.find_index(current_cycle)
+      raise "Unknown cycle: #{current_cycle.inspect}" unless current_cycle_index
+      GRANULARITIES[current_cycle_index + 1]
     end
 
     def extract_boundaries(range, cycle)
