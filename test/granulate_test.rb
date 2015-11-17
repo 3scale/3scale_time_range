@@ -41,6 +41,16 @@ class GranulateTest < Minitest::Test
       ]
   end
 
+  def test_granulates_by_hour
+    assert_equal @gran.hours,
+                 [TimeRange.new(
+                     DateTime.parse("2012-10-09 08:00").beginning_of_hour,
+                     DateTime.parse("2012-10-09 23:00").end_of_hour),
+                  TimeRange.new(
+                      DateTime.parse("2014-02-05 00:00").beginning_of_hour,
+                      DateTime.parse("2014-02-05 12:00").end_of_hour)]
+  end
+
   def test_exposes_information_on_not_granulated_ranges
     assert_equal @gran.rest, [
         TimeRange.new(
