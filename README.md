@@ -27,3 +27,12 @@ Enumerate by custom period
 Supports all Enumerable interface: find, select, reject, inject, etc.
 
 
+Version compatibility
+--------
+0.1.0: breaks compatibility with previous versions because it adds hours to the
+Granulate class. This means that in previous versions Granulate.rest contained
+time ranges that cannot be separated into days when granulating, but now it
+just contains ranges that cannot be separated into hours.
+
+
+
