@@ -81,6 +81,7 @@ class GranulateTest < Minitest::Test
     assert_equal 1, granulated_range[:years].size
     assert_equal 0, granulated_range[:months].size
     assert_equal 0, granulated_range[:days].size
+    assert_equal 0, granulated_range[:hours].size
     assert_equal 0, granulated_range[:rest].size
 
     refute granulated_range[:years].first.exclude_end?
@@ -93,8 +94,10 @@ class GranulateTest < Minitest::Test
     assert_equal 0, granulated_range[:years].size
     assert_equal 1, granulated_range[:months].size
     assert_equal 1, granulated_range[:days].size
+    assert_equal 1, granulated_range[:hours].size
     assert_equal 1, granulated_range[:rest].size
 
+    refute granulated_range[:hours].first.exclude_end?
     refute granulated_range[:months].first.exclude_end?
     refute granulated_range[:days].first.exclude_end?
     assert granulated_range[:rest].first.exclude_end?
@@ -107,6 +110,7 @@ class GranulateTest < Minitest::Test
     assert_equal 1, granulated_range[:years].size
     assert_equal 0, granulated_range[:months].size
     assert_equal 0, granulated_range[:days].size
+    assert_equal 0, granulated_range[:hours].size
     assert_equal 1, granulated_range[:rest].size
 
     refute granulated_range[:rest].first.exclude_end?
@@ -119,6 +123,7 @@ class GranulateTest < Minitest::Test
     assert_equal 1, granulated_range[:years].size
     assert_equal 0, granulated_range[:months].size
     assert_equal 0, granulated_range[:days].size
+    assert_equal 0, granulated_range[:hours].size
     assert_equal 0, granulated_range[:rest].size
 
     refute granulated_range[:years].first.exclude_end?
@@ -132,6 +137,7 @@ class GranulateTest < Minitest::Test
     assert_equal 0, granulated_range[:years].size
     assert_equal 1, granulated_range[:months].size
     assert_equal 0, granulated_range[:days].size
+    assert_equal 0, granulated_range[:hours].size
     assert_equal 0, granulated_range[:rest].size
   end
 
