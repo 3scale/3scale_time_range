@@ -9,36 +9,31 @@ class GranulateTest < Minitest::Test
   end
 
   def test_granulates_by_year
-    assert_equal @granulated_range[:years], [
-      TimeRange.new(
-        DateTime.parse("2013-01-01").beginning_of_year,
-        DateTime.parse("2013-12-31").end_of_year)
-    ]
+    assert_equal @granulated_range[:years],
+                 [TimeRange.new(
+                     DateTime.parse("2013-01-01").beginning_of_year,
+                     DateTime.parse("2013-12-31").end_of_year)]
   end
 
   def test_granulates_by_month
-    assert_equal @granulated_range[:months], [
-        TimeRange.new(
-          DateTime.parse("2012-11-01").beginning_of_month,
-          DateTime.parse("2012-12-31").end_of_month),
-
-        TimeRange.new(
-          DateTime.parse("2014-01-01").beginning_of_month,
-          DateTime.parse("2014-01-31").end_of_month)
-      ]
+    assert_equal @granulated_range[:months],
+                 [TimeRange.new(
+                     DateTime.parse("2012-11-01").beginning_of_month,
+                     DateTime.parse("2012-12-31").end_of_month),
+                  TimeRange.new(
+                      DateTime.parse("2014-01-01").beginning_of_month,
+                      DateTime.parse("2014-01-31").end_of_month)]
   end
 
 
   def test_granulates_by_day
-    assert_equal @granulated_range[:days], [
-        TimeRange.new(
-          DateTime.parse("2012-10-10").beginning_of_day,
-          DateTime.parse("2012-10-31").end_of_day),
-
-        TimeRange.new(
-          DateTime.parse("2014-02-01").beginning_of_day,
-          DateTime.parse("2014-02-04").end_of_day)
-      ]
+    assert_equal @granulated_range[:days],
+                 [TimeRange.new(
+                     DateTime.parse("2012-10-10").beginning_of_day,
+                     DateTime.parse("2012-10-31").end_of_day),
+                  TimeRange.new(
+                      DateTime.parse("2014-02-01").beginning_of_day,
+                      DateTime.parse("2014-02-04").end_of_day)]
   end
 
   def test_granulates_by_hour
@@ -52,26 +47,23 @@ class GranulateTest < Minitest::Test
   end
 
   def test_exposes_information_on_not_granulated_ranges
-    assert_equal @granulated_range[:rest], [
-        TimeRange.new(
-          DateTime.parse("2012-10-09 07:23"),
-          DateTime.parse("2012-10-09 07:00").end_of_hour),
-
-        TimeRange.new(
-          DateTime.parse("2014-02-05 13:45").beginning_of_hour,
-          DateTime.parse("2014-02-05 13:45"))
-      ]
+    assert_equal @granulated_range[:rest],
+                 [TimeRange.new(
+                     DateTime.parse("2012-10-09 07:23"),
+                     DateTime.parse("2012-10-09 07:00").end_of_hour),
+                  TimeRange.new(
+                      DateTime.parse("2014-02-05 13:45").beginning_of_hour,
+                      DateTime.parse("2014-02-05 13:45"))]
   end
 
   def test_range_that_cannot_be_granulated
     granulated_range = TimeRange.granulate(
         DateTime.parse("2012-10-09 07:23")..DateTime.parse("2012-10-09 07:45"))
 
-    assert_equal granulated_range[:rest], [
-        TimeRange.new(
-          DateTime.parse("2012-10-09 07:23"),
-          DateTime.parse("2012-10-09 07:45"))
-      ]
+    assert_equal granulated_range[:rest],
+                 [TimeRange.new(
+                     DateTime.parse("2012-10-09 07:23"),
+                     DateTime.parse("2012-10-09 07:45"))]
   end
 
   def test_properly_parses_open_ended_ranges_1
