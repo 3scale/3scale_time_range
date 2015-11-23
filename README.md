@@ -29,6 +29,10 @@ Supports all Enumerable interface: find, select, reject, inject, etc.
 
 Version compatibility
 --------
+0.2.0: The Granulate class has been converted to a class method that returns a
+hash. Granulate was not easy to use because it returned an instance of
+'Granulate'. This prevented clients from iterating through the result.
+
 0.1.0: breaks compatibility with previous versions because it adds hours to the
 Granulate class. This means that in previous versions Granulate.rest contained
 time ranges that cannot be separated into days when granulating, but now it
