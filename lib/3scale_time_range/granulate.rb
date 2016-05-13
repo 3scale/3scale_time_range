@@ -1,55 +1,58 @@
-class TimeRange
-  class Granulate
-    attr_accessor :days, :months, :years, :rest
+module Granulate
+  def self.included(base)
+    base.extend ClassMethods
+  end
 
-    def initialize(range)
-      raise 'Supports only TimeRange objects' unless range.is_a? TimeRange
+  module ClassMethods
+    GRANULARITIES = [:year, :month, :day, :hour]
 
-      @days = []
-      @years = []
-      @months = []
-      @rest = []
-      extract(range, :year)
+    def granulate(range)
+      result = { rest: [] }
+      GRANULARITIES.each do |granularity|
+        result[(granularity.to_s + 's').to_sym] = []
+      end
+      time_range = TimeRange.new(range.begin, range.end, range.exclude_end?)
+      extract(time_range, GRANULARITIES.first, result)
+      result
     end
 
     private
 
-    def extract(range, cycle)
+    def extract(range, cycle, result)
       if cycle.nil?
-        rest << range unless empty_range?(range)
+        result[:rest] << range unless empty_range?(range)
         return
       end
 
       cycle_start, cycle_end = extract_boundaries(range, cycle)
       if cycle_start && cycle_end
-        send("#{cycle}s") << TimeRange.new(cycle_start, cycle_end)
+        result[(cycle.to_s + 's').to_sym] << TimeRange.new(cycle_start, cycle_end)
 
         if range.begin < cycle_start
-          extract(
-            TimeRange.new(range.begin, (cycle_start - 1.hour).end_of_day, false),
-            next_cycle(cycle)
-          )
+          # Getting the last hour is enough because is the smallest resolution
+          # that we support. If we supported minutes, we would need to get the
+          # last minute non included.
+          last_hour_not_treated = (cycle_start - 1.hour).end_of_hour
+          extract(TimeRange.new(range.begin, last_hour_not_treated, false),
+                  next_cycle(cycle),
+                  result)
         end
+
         if range.end > cycle_end
-          extract(
-            TimeRange.new(
-              (cycle_end + 1.hour).beginning_of_day, range.end, range.exclude_end?
-            ),
-            next_cycle(cycle)
-          )
+          first_hour_not_treated = (cycle_end + 1.hour).beginning_of_hour
+          extract(TimeRange.new(first_hour_not_treated, range.end, range.exclude_end?),
+                  next_cycle(cycle),
+                  result)
         end
       else
-        extract(range, next_cycle(cycle))
+        extract(range, next_cycle(cycle), result)
       end
     end
 
     def next_cycle(current_cycle)
-      case current_cycle
-        when :year then :month
-        when :month then :day
-        when :day then nil
-        else raise "Unknown cycle: #{current_cycle.inspect}"
-      end
+      current_cycle_index = GRANULARITIES.find_index(current_cycle)
+      raise "Unknown cycle: #{current_cycle.inspect}" unless current_cycle_index
+      GRANULARITIES[current_cycle_index + 1]
     end
 
     def extract_boundaries(range, cycle)
@@ -80,6 +83,5 @@ class TimeRange
     def empty_range?(range)
       (range.begin.to_i == range.end.to_i) && range.exclude_end?
     end
-
   end
 end

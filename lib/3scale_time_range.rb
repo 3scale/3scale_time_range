@@ -4,6 +4,8 @@ require '3scale_time_range/granulate'
 
 class TimeRange < Range
 
+  include Granulate
+
   def initialize(start_time, end_time, exclusive = false)
     raise ArgumentError, 'start and end must act like Time' unless start_time.acts_like?(:time) && end_time.acts_like?(:time)
 
@@ -112,10 +114,6 @@ class TimeRange < Range
 
   def inspect
     "#{self.class.name}(#{super})"
-  end
-
-  def granulate
-    @granulate ||= Granulate.new(self)
   end
 
   class SimpleEnumerator
