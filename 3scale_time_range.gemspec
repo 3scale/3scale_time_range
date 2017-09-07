@@ -11,6 +11,7 @@ Gem::Specification.new do |spec|
   spec.summary       = %q{Utility class for ranges of times (time periods).}
   spec.description   = %q{Utility class for ranges of times (time periods). It's like Range, but has additional enumeration capabilities.}
   spec.homepage      = "https://github.com/3scale/3scale_time_range"
+  spec.license       = 'Apache-2.0'
 
   spec.files         = `git ls-files -z`.split("\x0")
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
