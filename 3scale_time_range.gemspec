@@ -6,8 +6,8 @@ require '3scale_time_range/version'
 Gem::Specification.new do |spec|
   spec.name          = "3scale_time_range"
   spec.version       = TimeRange::VERSION
-  spec.authors       = ["Wojciech Ogrodowczyk"]
-  spec.email         = ["wojciech@3scale.net"]
+  spec.authors       = ["Wojciech Ogrodowczyk", "Alejandro Martinez Ruiz", "Michal Macejko", "Michal Cichra", "David Ortiz Lopez"]
+  spec.email         = ["wojciech@haikuco.de", "amr@redhat.com", "mmacejko@redhat.com", "mcichra@redhat.com", "dortiz@redhat.com"]
   spec.summary       = %q{Utility class for ranges of times (time periods).}
   spec.description   = %q{Utility class for ranges of times (time periods). It's like Range, but has additional enumeration capabilities.}
   spec.homepage      = "https://github.com/3scale/3scale_time_range"
