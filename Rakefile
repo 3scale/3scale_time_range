@@ -13,3 +13,8 @@ task 'geminabox' do
   Rake::Task['release'].invoke
   system('gem inabox')
 end
+
+
+task :benchmark do
+  require_relative 'test/performance/benchmark'
+end
